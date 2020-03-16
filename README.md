@@ -1,9 +1,9 @@
-#### ASD Project by Yotam ####
+#### Abra by YotamEN ####
  
-####        README        ####
+#### README ####
 
-installation:
-    download all files
-    run scripts/install.sh
-    read requeirments.txt - make sure all packages are installed
+installation:\
+    download all files\
+    run scripts/install.sh\
+    read requirements.txt - make sure all packages are installed
     

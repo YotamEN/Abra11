@@ -1,0 +1,24 @@
+# Environements
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Logs
+*.log
+
+# Testing
+.pytest_cache/
+.coverage
+
+# Flask, Scrapy, Sphinx
+instance/
+.webassets-cache
+.scrapy
+docs/_build/
+
+# Others
+.idea/
+.DS_Store
+__pycache__/

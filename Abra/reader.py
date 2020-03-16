@@ -1,50 +1,66 @@
-from mind_read_protocol import Snapshot
+# from mind_read_protocol import Snapshot
+from abra_pb2 import User, Snapshot
+import gzip
 import struct
 
+UNDEFINED = -1
+MSG_SIZE_HEADER = 4
+DOUBLE_SIZE = 8
+UINT_64_SIZE = 8
+UINT_32_SIZE = 4
+FLOAT_SIZE = 4
 
+# TODO add context manager for errors
 class Reader:
 
-    def __init__(self):
-        self.user_id = 0
-        self.username = 'None'
-        self.user_birth_date = 0
-        self.user_gender = 'o'
+    def __init__(self, path, next_func=None, endian='little'):
+        self._path = path
+        self._next_func = next_func
+        self._endian = endian
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self._next_func is None:
+            return None
+        return self._next_func()
 
 
 # FIXME - add try, except, finally and close file
 class MindReader(Reader):
 
     def __init__(self, path):
-        super().__init__()
-        self._path = path
-        self._file = open(self._path, "rb")
-        self.get_user_info(self._file)
+        self.user = None
+        self.user_id = UNDEFINED
+        self.username = ""
+        self.user_gender = ""
+        self.user_birth_date = UNDEFINED
 
-    def __iter__(self):
-        return self
+        super().__init__(path, self.get_snapshot)
+        self._file = gzip.open(self._path)
+        self.get_user_info()
 
-    def __next__(self):
-        return self.create_snapshot_from_file()
+    def get_user_info(self):
+        num_of_bytes = self.get_msg_length()
+        user_data_raw = self._file.read(num_of_bytes)
+        user = User.FromString(user_data_raw)
+        self.user = user
+        self.user_id = user.user_id
+        self.username = user.username
+        self.user_gender = user.gender
+        self.user_birth_date = user.birthday
 
-    def get_user_info(self, file):
-        self.user_id = struct.unpack('<L', file.read(8))[0]
-        username_length = struct.unpack('<I', file.read(4))[0]
-        self.username = struct.unpack(f'<{username_length}s', file.read(username_length))[0]
-        self.user_birth_date = struct.unpack('<I', file.read(4))[0]
-        self.user_gender = struct.unpack('c', file.read(1))[0]
+    def get_snapshot(self):
+        num_of_bytes = self.get_msg_length()
+        user_data_raw = self._file.read(num_of_bytes)
+        snapshot = Snapshot.FromString(user_data_raw)
+        return snapshot
 
-    def create_snapshot_from_file(self):
-        timestamp = struct.unpack('<L', self._file.read(8))[0]
-        translation = struct.unpack('<3d', self._file.read(8 * 3))
-        rotation = struct.unpack('<4d', self._file.read(8 * 4))
-        height, width = struct.unpack('<II', self._file.read(4 * 2))
-        color_image = self._file.read(height*width*3)
-        col_img_data = height, width, color_image
-        height, width = struct.unpack('<II', self._file.read(4 * 2))
-        depth_image = self._file.read(height*width*3)
-        depth_img_data = height, width, depth_image
-        user_feelings = struct.unpack('<4f', self._file.read(4 * 4))
-        return Snapshot(timestamp, translation, rotation, col_img_data, depth_img_data, user_feelings)
+    def get_msg_length(self):
+        length_in_bytes = self._file.read(MSG_SIZE_HEADER)
+        length_int = int.from_bytes(length_in_bytes, byteorder=self._endian)
+        return length_int
 
 
 

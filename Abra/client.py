@@ -5,7 +5,16 @@ import time
 import http.client
 
 
-def upload(address, user, thought):
+@click.group()
+def main():
+    pass
+
+
+@main.command()
+@click.option("--host", "-h", default='127.0.0.1')
+@click.option("--port", "-p", default=8000)
+@click.argument('path')
+def upload_sample(address, user, thought):
     try:
         # create socket
         conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
