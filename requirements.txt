@@ -1,0 +1,6 @@
+click
+coverage
+Sphinx
+pillow -6.2.1
+docker
+google.protobuf
