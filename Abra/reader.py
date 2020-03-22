@@ -3,12 +3,9 @@ from abra_pb2 import User, Snapshot
 import gzip
 import struct
 
-UNDEFINED = -1
+UNDEFINED: int = -1
 MSG_SIZE_HEADER = 4
-DOUBLE_SIZE = 8
-UINT_64_SIZE = 8
-UINT_32_SIZE = 4
-FLOAT_SIZE = 4
+
 
 # TODO add context manager for errors
 class Reader:
@@ -27,19 +24,18 @@ class Reader:
         return self._next_func()
 
 
-# FIXME - add try, except, finally and close file
 class MindReader(Reader):
 
     def __init__(self, path):
+        super().__init__(path, self.get_snapshot)
         self.user = None
         self.user_id = UNDEFINED
         self.username = ""
         self.user_gender = ""
         self.user_birth_date = UNDEFINED
-
-        super().__init__(path, self.get_snapshot)
         self._file = gzip.open(self._path)
         self.get_user_info()
+        self.done = 0
 
     def get_user_info(self):
         num_of_bytes = self.get_msg_length()
@@ -53,12 +49,17 @@ class MindReader(Reader):
 
     def get_snapshot(self):
         num_of_bytes = self.get_msg_length()
+        if num_of_bytes == 0:
+            return None
         user_data_raw = self._file.read(num_of_bytes)
         snapshot = Snapshot.FromString(user_data_raw)
         return snapshot
 
     def get_msg_length(self):
         length_in_bytes = self._file.read(MSG_SIZE_HEADER)
+        if length_in_bytes == b'':
+            self.done = 1
+            return 0
         length_int = int.from_bytes(length_in_bytes, byteorder=self._endian)
         return length_int
 

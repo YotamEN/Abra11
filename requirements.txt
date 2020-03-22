@@ -1,6 +1,9 @@
 click
 coverage
-Sphinx
-pillow -6.2.1
 docker
+flask
+requests
+Sphinx
+termcolor
+# pillow-6.2.1
 protobuf

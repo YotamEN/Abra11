@@ -11,4 +11,3 @@ if __name__ == '__main__':
         print("USAGE: python -m ASD_Project [COMMAND] [ARGS]}")
     else:
         run_project_command()
-        
