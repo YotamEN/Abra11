@@ -11,10 +11,12 @@ class ProtocolHandler:
         self.host = host
         self.port = port
         self.path = path
+        self.num_msg = -1
 
     def post(self, data):
+        tag = "user" if self.num_msg < 0 else "new_msg"
         try:
-            response = requests.post(f'http://{self.host}:{self.port}/new_msg',
+            response = requests.post(f'http://{self.host}:{self.port}/{tag}',
                                      headers={'Content-Type': 'application/protobuf'}, data=data)
             response.raise_for_status()
             return SUCCESS

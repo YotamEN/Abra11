@@ -36,6 +36,11 @@ def publish_data():
     pass
 
 
+@app.route('/user', methods=['POST'])
+def register_new_user():
+    pass
+
+
 if __name__ == '__main__':
     main()
 

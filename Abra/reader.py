@@ -63,5 +63,6 @@ class MindReader(Reader):
         length_int = int.from_bytes(length_in_bytes, byteorder=self._endian)
         return length_int
 
-
+    def done(self):
+        return self.done
 
