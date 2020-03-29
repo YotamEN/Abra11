@@ -1,5 +1,7 @@
 import click
-from utils.mq_handlers import MQHandler
+from furl import furl
+from .reader import MindReader
+from utils.mq_handlers import RabbitMQHandler
 
 UNDEFINED = -1
 parser_names = ["pose", "c_image", "d_image", "feelings"]
@@ -10,19 +12,33 @@ def main():
     pass
 
 
-class Parser(MQHandler):
+class Parser:
 
     def __init__(self, mq_exchange='', name='', file_path=None, queue_url=None):
-        super().__init__(name, mq_exchange, queue_url, publish_to=f'{"saver" if file_path is None else file_path}')
-        self.data = None
+        if queue_url is not None:
+            self._with_queue = True
+            furl_path = furl(queue_url)
+            if furl_path.scheme == 'rabbitmq':
+                self.mq_handler = RabbitMQHandler(queue_name=name, exchange_name=mq_exchange, queue_url=queue_url)
+            self.mq_handler.on_callback = self.parse
+        else:
+            self._with_queue = False
+            # self.publish = self.write_to_file
+            self._file = open(file_path, "w+")
+        # self.data = None
         self.name = name
-        self.channel.queue_declare(queue=self.name)
-        if file_path is not None:
-            self.publish = self.write_to_file
-        # begin listening on queue
-        self.start_consuming()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self._file is not None:
+            self._file.close()
 
     def write_to_file(self, msg):
+        self._file.write(msg)
+
+    # each parser must implement this function
+    # 'msg' input is of type "bytes"
+    # output muse be type "bytes" as well
+    def parse(self, msg):
         pass
 
 
@@ -33,7 +49,7 @@ class PoseParser(Parser):
         self.translation = None
         self.rotation = None
 
-    def callback(self, channel, method, properties, body):
+    def parse(self, msg):
         pass
 
 
@@ -43,7 +59,7 @@ class CImageParser(Parser):
         super().__init__(mq_exchange=mq_exchange, name="Color Image", queue_url=queue_url)
         self.c_image_path = None
 
-    def callback(self, channel, method, properties, body):
+    def parse(self, msg):
         pass
 
 
@@ -53,7 +69,7 @@ class DImageParser(Parser):
         super().__init__(mq_exchange=mq_exchange, name="Depth Image", queue_url=queue_url)
         self.d_image_path = None
 
-    def callback(self, channel, method, properties, body):
+    def parse(self, msg):
         pass
 
 
@@ -66,7 +82,7 @@ class FeelingsParser(Parser):
         self.exhaustion = UNDEFINED
         self.happiness = UNDEFINED
 
-    def callback(self, channel, method, properties, body):
+    def parse(self, msg):
         pass
 
 
@@ -75,14 +91,17 @@ class FeelingsParser(Parser):
 @click.argument('data_path', help="Path to data for parsing")
 @click.argument('publish_to', help="URL of your Message Queue or File")
 def parse(parser: str, data_path: str, publish_to=None):
-    pass
+    parser_class = get_parser_type(parser)
+    parser_h = parser_class(name=parser)
 
 
 @main.command()
 @click.argument('parser', help="Name of requested parser")
 @click.argument('mq_url', help="URL of your Message Queue")
 def run_parser(parser: str, mq_url: str):
-    pass
+    parser_class = get_parser_type(parser)
+    parser_h = parser_class(name=parser, queue_url=mq_url)
+    parser_h.mq_handler.start_consuming()
 
 
 def get_parser_type(string: str):

@@ -2,6 +2,7 @@ click
 coverage
 docker
 flask
+furl
 requests
 Sphinx
 termcolor
