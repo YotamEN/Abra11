@@ -27,6 +27,7 @@ def upload_sample(host, port, path):
             print("Error Occurred!")  # FIXME ERRORs
 
 
+# FOR DEBUG:
 @main.command()
 @click.option("--num_samples", "-n", default=-1)
 @click.argument('path')

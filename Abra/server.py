@@ -1,8 +1,9 @@
 from .abra_pb2 import User, Snapshot, SnapshotWrapper, SnapshotPathWrapper
 import click
-from flask import Flask, request, jsonify
+from .common import *
+from flask import Flask, request
+import json
 import os
-from pathlib import Path
 import random
 from termcolor import cprint
 from utils.mq_handlers import MQHandler
@@ -37,7 +38,7 @@ def run_server(host, port, publish=None):
 
 @app.route('/msg', methods=['POST'])
 def new_msg():
-    snapshot_wrapper = SnapshotWrapper()
+    snapshot_wrapper = Snapshot()
     msg = request.data
     snapshot_wrapper.ParseFromString(msg)
 
@@ -65,10 +66,11 @@ def register_new_user():
         _publish(user)
         return
 
-    publish_user(user)
+    json_user = jsonify_user(user)
+    publish_user(json_user)
 
 
-def publish_msg(msg):  # FIXME when MQhandler is finished
+def publish_msg(msg):
     mq_handler = MQHandler(_publish)
     mq_handler.publish_to_parsers(msg)
 
@@ -89,6 +91,16 @@ def save_snapshot(snapshot: Snapshot, path: str):
     except ValueError:
         return FAIL
     return SUCCESS
+
+
+def jsonify_user(user):
+    json_user = {
+        USER_ID_KEY: user.user_id,
+        USERNAME_KEY: user.username,
+        BIRTHDAY_KEY: user.birthday,
+        GENDER_KEY: user.gender
+    }
+    return json.dumps(json_user)
 
 
 if __name__ == '__main__':
