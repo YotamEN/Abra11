@@ -14,7 +14,7 @@ class ProtocolHandler:
         self.num_msg = -1
 
     def post(self, data):
-        tag = "user" if self.num_msg < 0 else "new_msg"
+        tag = "user" if self.num_msg < 0 else "msg"
         try:
             response = requests.post(f'http://{self.host}:{self.port}/{tag}',
                                      headers={'Content-Type': 'application/protobuf'}, data=data)

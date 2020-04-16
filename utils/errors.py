@@ -1,0 +1,3 @@
+
+class UnsupportedMessageQueueError(Exception):
+    pass

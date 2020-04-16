@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='Abra',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=b'\n\nabra.proto\x12\x04\x41\x62ra\"\x89\x01\n\x04User\x12\x0f\n\x07user_id\x18\x01 \x01(\x04\x12\x10\n\x08username\x18\x02 \x01(\t\x12\x10\n\x08\x62irthday\x18\x03 \x01(\r\x12!\n\x06gender\x18\x04 \x01(\x0e\x32\x11.Abra.User.Gender\")\n\x06Gender\x12\x08\n\x04MALE\x10\x00\x12\n\n\x06\x46\x45MALE\x10\x01\x12\t\n\x05OTHER\x10\x02\"\xa6\x01\n\x08Snapshot\x12\x10\n\x08\x64\x61tetime\x18\x01 \x01(\x04\x12\x18\n\x04pose\x18\x02 \x01(\x0b\x32\n.Abra.Pose\x12%\n\x0b\x63olor_image\x18\x03 \x01(\x0b\x32\x10.Abra.ColorImage\x12%\n\x0b\x64\x65pth_image\x18\x04 \x01(\x0b\x32\x10.Abra.DepthImage\x12 \n\x08\x66\x65\x65lings\x18\x05 \x01(\x0b\x32\x0e.Abra.Feelings\"\xc2\x01\n\x04Pose\x12+\n\x0btranslation\x18\x01 \x01(\x0b\x32\x16.Abra.Pose.Translation\x12%\n\x08rotation\x18\x02 \x01(\x0b\x32\x13.Abra.Pose.Rotation\x1a.\n\x0bTranslation\x12\t\n\x01x\x18\x01 \x01(\x01\x12\t\n\x01y\x18\x02 \x01(\x01\x12\t\n\x01z\x18\x03 \x01(\x01\x1a\x36\n\x08Rotation\x12\t\n\x01x\x18\x01 \x01(\x01\x12\t\n\x01y\x18\x02 \x01(\x01\x12\t\n\x01z\x18\x03 \x01(\x01\x12\t\n\x01w\x18\x04 \x01(\x01\"9\n\nColorImage\x12\r\n\x05width\x18\x01 \x01(\r\x12\x0e\n\x06height\x18\x02 \x01(\r\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\"9\n\nDepthImage\x12\r\n\x05width\x18\x01 \x01(\r\x12\x0e\n\x06height\x18\x02 \x01(\r\x12\x0c\n\x04\x64\x61ta\x18\x03 \x03(\x02\"Q\n\x08\x46\x65\x65lings\x12\x0e\n\x06hunger\x18\x01 \x01(\x02\x12\x0e\n\x06thirst\x18\x02 \x01(\x02\x12\x12\n\nexhaustion\x18\x03 \x01(\x02\x12\x11\n\thappiness\x18\x04 \x01(\x02\x62\x06proto3'
+  serialized_pb=b'\n\nabra.proto\x12\x04\x41\x62ra\"\x89\x01\n\x04User\x12\x0f\n\x07user_id\x18\x01 \x01(\x04\x12\x10\n\x08username\x18\x02 \x01(\t\x12\x10\n\x08\x62irthday\x18\x03 \x01(\r\x12!\n\x06gender\x18\x04 \x01(\x0e\x32\x11.Abra.User.Gender\")\n\x06Gender\x12\x08\n\x04MALE\x10\x00\x12\n\n\x06\x46\x45MALE\x10\x01\x12\t\n\x05OTHER\x10\x02\"^\n\x0fSnapshotWrapper\x12\x0f\n\x07msg_num\x18\x01 \x01(\r\x12 \n\x08snapshot\x18\x02 \x01(\x0b\x32\x0e.Abra.Snapshot\x12\x18\n\x04user\x18\x03 \x01(\x0b\x32\n.Abra.User\"=\n\x13SnapshotPathWrapper\x12\x0c\n\x04path\x18\x01 \x01(\t\x12\x18\n\x04user\x18\x02 \x01(\x0b\x32\n.Abra.User\"\xa6\x01\n\x08Snapshot\x12\x10\n\x08\x64\x61tetime\x18\x01 \x01(\x04\x12\x18\n\x04pose\x18\x02 \x01(\x0b\x32\n.Abra.Pose\x12%\n\x0b\x63olor_image\x18\x03 \x01(\x0b\x32\x10.Abra.ColorImage\x12%\n\x0b\x64\x65pth_image\x18\x04 \x01(\x0b\x32\x10.Abra.DepthImage\x12 \n\x08\x66\x65\x65lings\x18\x05 \x01(\x0b\x32\x0e.Abra.Feelings\"\xc2\x01\n\x04Pose\x12+\n\x0btranslation\x18\x01 \x01(\x0b\x32\x16.Abra.Pose.Translation\x12%\n\x08rotation\x18\x02 \x01(\x0b\x32\x13.Abra.Pose.Rotation\x1a.\n\x0bTranslation\x12\t\n\x01x\x18\x01 \x01(\x01\x12\t\n\x01y\x18\x02 \x01(\x01\x12\t\n\x01z\x18\x03 \x01(\x01\x1a\x36\n\x08Rotation\x12\t\n\x01x\x18\x01 \x01(\x01\x12\t\n\x01y\x18\x02 \x01(\x01\x12\t\n\x01z\x18\x03 \x01(\x01\x12\t\n\x01w\x18\x04 \x01(\x01\"9\n\nColorImage\x12\r\n\x05width\x18\x01 \x01(\r\x12\x0e\n\x06height\x18\x02 \x01(\r\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\"9\n\nDepthImage\x12\r\n\x05width\x18\x01 \x01(\r\x12\x0e\n\x06height\x18\x02 \x01(\r\x12\x0c\n\x04\x64\x61ta\x18\x03 \x03(\x02\"Q\n\x08\x46\x65\x65lings\x12\x0e\n\x06hunger\x18\x01 \x01(\x02\x12\x0e\n\x06thirst\x18\x02 \x01(\x02\x12\x12\n\nexhaustion\x18\x03 \x01(\x02\x12\x11\n\thappiness\x18\x04 \x01(\x02\x62\x06proto3'
 )
 
 
@@ -103,6 +103,89 @@ _USER = _descriptor.Descriptor(
 )
 
 
+_SNAPSHOTWRAPPER = _descriptor.Descriptor(
+  name='SnapshotWrapper',
+  full_name='Abra.SnapshotWrapper',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='msg_num', full_name='Abra.SnapshotWrapper.msg_num', index=0,
+      number=1, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='snapshot', full_name='Abra.SnapshotWrapper.snapshot', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='user', full_name='Abra.SnapshotWrapper.user', index=2,
+      number=3, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=160,
+  serialized_end=254,
+)
+
+
+_SNAPSHOTPATHWRAPPER = _descriptor.Descriptor(
+  name='SnapshotPathWrapper',
+  full_name='Abra.SnapshotPathWrapper',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='path', full_name='Abra.SnapshotPathWrapper.path', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='user', full_name='Abra.SnapshotPathWrapper.user', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=256,
+  serialized_end=317,
+)
+
+
 _SNAPSHOT = _descriptor.Descriptor(
   name='Snapshot',
   full_name='Abra.Snapshot',
@@ -157,8 +240,8 @@ _SNAPSHOT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=161,
-  serialized_end=327,
+  serialized_start=320,
+  serialized_end=486,
 )
 
 
@@ -202,8 +285,8 @@ _POSE_TRANSLATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=422,
-  serialized_end=468,
+  serialized_start=581,
+  serialized_end=627,
 )
 
 _POSE_ROTATION = _descriptor.Descriptor(
@@ -253,8 +336,8 @@ _POSE_ROTATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=470,
-  serialized_end=524,
+  serialized_start=629,
+  serialized_end=683,
 )
 
 _POSE = _descriptor.Descriptor(
@@ -290,8 +373,8 @@ _POSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=330,
-  serialized_end=524,
+  serialized_start=489,
+  serialized_end=683,
 )
 
 
@@ -335,8 +418,8 @@ _COLORIMAGE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=526,
-  serialized_end=583,
+  serialized_start=685,
+  serialized_end=742,
 )
 
 
@@ -380,8 +463,8 @@ _DEPTHIMAGE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=585,
-  serialized_end=642,
+  serialized_start=744,
+  serialized_end=801,
 )
 
 
@@ -432,12 +515,15 @@ _FEELINGS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=644,
-  serialized_end=725,
+  serialized_start=803,
+  serialized_end=884,
 )
 
 _USER.fields_by_name['gender'].enum_type = _USER_GENDER
 _USER_GENDER.containing_type = _USER
+_SNAPSHOTWRAPPER.fields_by_name['snapshot'].message_type = _SNAPSHOT
+_SNAPSHOTWRAPPER.fields_by_name['user'].message_type = _USER
+_SNAPSHOTPATHWRAPPER.fields_by_name['user'].message_type = _USER
 _SNAPSHOT.fields_by_name['pose'].message_type = _POSE
 _SNAPSHOT.fields_by_name['color_image'].message_type = _COLORIMAGE
 _SNAPSHOT.fields_by_name['depth_image'].message_type = _DEPTHIMAGE
@@ -447,6 +533,8 @@ _POSE_ROTATION.containing_type = _POSE
 _POSE.fields_by_name['translation'].message_type = _POSE_TRANSLATION
 _POSE.fields_by_name['rotation'].message_type = _POSE_ROTATION
 DESCRIPTOR.message_types_by_name['User'] = _USER
+DESCRIPTOR.message_types_by_name['SnapshotWrapper'] = _SNAPSHOTWRAPPER
+DESCRIPTOR.message_types_by_name['SnapshotPathWrapper'] = _SNAPSHOTPATHWRAPPER
 DESCRIPTOR.message_types_by_name['Snapshot'] = _SNAPSHOT
 DESCRIPTOR.message_types_by_name['Pose'] = _POSE
 DESCRIPTOR.message_types_by_name['ColorImage'] = _COLORIMAGE
@@ -460,6 +548,20 @@ User = _reflection.GeneratedProtocolMessageType('User', (_message.Message,), {
   # @@protoc_insertion_point(class_scope:Abra.User)
   })
 _sym_db.RegisterMessage(User)
+
+SnapshotWrapper = _reflection.GeneratedProtocolMessageType('SnapshotWrapper', (_message.Message,), {
+  'DESCRIPTOR' : _SNAPSHOTWRAPPER,
+  '__module__' : 'abra_pb2'
+  # @@protoc_insertion_point(class_scope:Abra.SnapshotWrapper)
+  })
+_sym_db.RegisterMessage(SnapshotWrapper)
+
+SnapshotPathWrapper = _reflection.GeneratedProtocolMessageType('SnapshotPathWrapper', (_message.Message,), {
+  'DESCRIPTOR' : _SNAPSHOTPATHWRAPPER,
+  '__module__' : 'abra_pb2'
+  # @@protoc_insertion_point(class_scope:Abra.SnapshotPathWrapper)
+  })
+_sym_db.RegisterMessage(SnapshotPathWrapper)
 
 Snapshot = _reflection.GeneratedProtocolMessageType('Snapshot', (_message.Message,), {
   'DESCRIPTOR' : _SNAPSHOT,

@@ -1,6 +1,6 @@
 import click
 from furl import furl
-from utils.mq_handlers import RabbitMQHandler
+from utils.mq_handlers import MQHandler
 
 
 @click.group()

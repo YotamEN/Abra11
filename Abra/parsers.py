@@ -1,7 +1,7 @@
 import click
 from furl import furl
 from .reader import MindReader
-from utils.mq_handlers import RabbitMQHandler
+from utils.mq_handlers import MQHandler
 
 UNDEFINED = -1
 parser_names = ["pose", "c_image", "d_image", "feelings"]
@@ -14,12 +14,10 @@ def main():
 
 class Parser:
 
-    def __init__(self, mq_exchange='', name='', file_path=None, queue_url=None):
+    def __init__(self):
         if queue_url is not None:
             self._with_queue = True
-            furl_path = furl(queue_url)
-            if furl_path.scheme == 'rabbitmq':
-                self.mq_handler = RabbitMQHandler(queue_name=name, exchange_name=mq_exchange, queue_url=queue_url)
+            self.mq_handler = MQHandler(queue_url)
             self.mq_handler.on_callback = self.parse
         else:
             self._with_queue = False

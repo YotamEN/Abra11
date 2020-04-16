@@ -1,5 +1,5 @@
 # from mind_read_protocol import Snapshot
-from abra_pb2 import User, Snapshot
+from .abra_pb2 import User, Snapshot, SnapshotWrapper
 import gzip
 import struct
 
@@ -36,6 +36,7 @@ class MindReader(Reader):
         self._file = gzip.open(self._path)
         self.get_user_info()
         self.done = 0
+        self.msg_num = 0
 
     def get_user_info(self):
         num_of_bytes = self.get_msg_length()
@@ -51,9 +52,14 @@ class MindReader(Reader):
         num_of_bytes = self.get_msg_length()
         if num_of_bytes == 0:
             return None
-        user_data_raw = self._file.read(num_of_bytes)
-        snapshot = Snapshot.FromString(user_data_raw)
-        return snapshot
+        self.msg_num += 1
+        snapshot_wrapper = SnapshotWrapper()
+        snapshot_data_raw = self._file.read(num_of_bytes)
+        snapshot = Snapshot.FromString(snapshot_data_raw)
+        snapshot_wrapper.user.CopyFrom(self.user)
+        snapshot_wrapper.snapshot.CopyFrom(snapshot)
+        snapshot_wrapper.msg_num = self.msg_num
+        return snapshot_wrapper
 
     def get_msg_length(self):
         length_in_bytes = self._file.read(MSG_SIZE_HEADER)

@@ -1,10 +1,7 @@
 version: '3.7'
 
-build:
-  context: .
-
 services:
-    rabbit:
+    rabbitmq:
         hostname: rabbit
         image: rabbitmq:latest
         environment:
@@ -13,18 +10,8 @@ services:
         ports:
             - "5673:5672"
 
-    worker:
-        build:
-            context: .
-            dockerfile: dockerfile
-        volumes:
-            - .:/app
-        links:
-            - rabbit
-        depends_on:
-            - rabbit
 
-    database:
+    db:
         hostname: mongo
         image: mongo:latest
         ports:

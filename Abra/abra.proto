@@ -14,6 +14,17 @@ message User {
     Gender gender = 4;
 }
 
+message SnapshotWrapper{
+    uint32 msg_num = 1;
+    Snapshot snapshot = 2;
+    User user = 3;
+}
+
+message SnapshotPathWrapper{
+    string path = 1;
+    User user = 2;
+}
+
 message Snapshot {
     uint64 datetime = 1;
     Pose pose = 2;

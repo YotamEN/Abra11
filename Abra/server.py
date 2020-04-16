@@ -1,13 +1,19 @@
+from .abra_pb2 import User, Snapshot, SnapshotWrapper, SnapshotPathWrapper
 import click
-from flask import Flask, escape, request
-import threading
+from flask import Flask, request, jsonify
+import os
+from pathlib import Path
+import random
 from termcolor import cprint
-import pathlib
+from utils.mq_handlers import MQHandler
 
 
-lock = threading.Lock()
+_WORK_DIR = "/state_of_minds"
+SUCCESS = 0
+FAIL = 1
 app = Flask(__name__)
 _publish = None
+
 
 #FIXME add errors everywhere
 @click.group()
@@ -15,14 +21,12 @@ def main():
     pass
 
 
-@main.command()
+@main.command('run-server')
 @click.option("--host", "-h", default='127.0.0.1')
 @click.option("--port", "-p", default=8000)
 @click.argument('publish', help="URL to message queue")
 def run_server(host, port, publish=None):
     global _publish
-    if publish is None:
-        publish = publish_data
     _publish = publish
 
     app.run(host, port)
@@ -31,14 +35,60 @@ def run_server(host, port, publish=None):
     cprint(f'host: {host}\nport: {port}', 'red')
         
 
-@app.route('/new_msg', methods=['POST'])
-def publish_data():
-    pass
+@app.route('/msg', methods=['POST'])
+def new_msg():
+    snapshot_wrapper = SnapshotWrapper()
+    msg = request.data
+    snapshot_wrapper.ParseFromString(msg)
+
+    user, snapshot, msg_num = snapshot_wrapper.user, snapshot_wrapper.snapshot, snapshot_wrapper.msg_num
+    unique_path = f'{user.id}_{msg_num}_{random.random()}'
+    while save_snapshot(snapshot, unique_path):
+        unique_path = f'{user.id}_{msg_num}_{random.random()}'
+
+    snapshot_path_wrapper = SnapshotPathWrapper()
+    snapshot_path_wrapper.path = unique_path
+    snapshot_path_wrapper.user = user
+    if callable(_publish):
+        _publish(snapshot_path_wrapper)
+        return
+
+    publish_msg(snapshot_path_wrapper)
 
 
 @app.route('/user', methods=['POST'])
 def register_new_user():
-    pass
+    user_data = request.data
+    user = User.ParseFromString(user_data)
+
+    if callable(_publish):
+        _publish(user)
+        return
+
+    publish_user(user)
+
+
+def publish_msg(msg):  # FIXME when MQhandler is finished
+    mq_handler = MQHandler(_publish)
+    mq_handler.publish_to_parsers(msg)
+
+
+def publish_user(user):
+    mq_handler = MQHandler(_publish)
+    mq_handler.publish_to_saver_queue(user)
+
+
+def save_snapshot(snapshot: Snapshot, path: str):
+    if os.path.isdir(path):
+        return FAIL
+    try:
+        with open(path, "wb") as f:
+            f.write(snapshot.SerializeToString())
+    except OSError:
+        return FAIL
+    except ValueError:
+        return FAIL
+    return SUCCESS
 
 
 if __name__ == '__main__':

@@ -9,7 +9,7 @@ def main():
     pass
 
 
-@main.command()
+@main.command("upload-sample")
 @click.option("--host", "-h", default='127.0.0.1')
 @click.option("--port", "-p", default=8000)
 @click.argument('path')
@@ -46,6 +46,10 @@ def read_next(reader):
     message = next(reader)
     if message is None:
         return
+    print_message(message)
+
+
+def print_message(message):
     print(f"Datetime: {message.datetime}")
     print(f"Pose:")
     print(f"\tTranslation: ("
