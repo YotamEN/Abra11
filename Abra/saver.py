@@ -1,6 +1,6 @@
 import click
 from furl import furl
-from utils.mq_handlers import MQHandler
+from utils.db.dbhandlers import DBHandler
 
 
 @click.group()
@@ -11,11 +11,7 @@ def main():
 class Saver:
 
     def __init__(self, db_url):
-        self.database_url = db_url
-        furl_url = furl(db_url)
-        if furl_url.scheme == 'postgresql':
-            pass
-        self.queue_handlers = []
+        self.db_handler = DBHandler(db_url)
 
     def register_to_topic(self, topic):
         pass
@@ -24,16 +20,16 @@ class Saver:
         pass
 
 
-@main.command()
+@main.command("save")
 @click.option("--database", "-d")
 @click.argument('topic', help="Topic name")
-def save(self, db_url, topic, data):
+def save_cli(self, db_url, topic, data):
     furl_url = furl(db_url)
     if furl_url.scheme == 'postgresql':
         pass
 
 
-@main.command()
+@main.command("run-saver")
 @click.option("--database", "-d")
 @click.argument('topic', help="Topic name")
 def run_saver(db_url, mq_url):

@@ -1,4 +1,4 @@
-from .abra_pb2 import User, Snapshot, SnapshotWrapper, SnapshotPathWrapper
+from .abra_pb2 import User, Snapshot, SnapshotPathWrapper
 import click
 from .common import *
 from flask import Flask, request
@@ -6,7 +6,7 @@ import json
 import os
 import random
 from termcolor import cprint
-from utils.mq_handlers import MQHandler
+from utils.mq.mq_handlers import MQHandler
 
 
 _WORK_DIR = "/state_of_minds"

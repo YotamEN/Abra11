@@ -1,9 +1,8 @@
-from Abra.abra_pb2 import User, Snapshot, SnapshotWrapper, SnapshotPathWrapper
+from Abra.abra_pb2 import Snapshot, SnapshotPathWrapper
 import click
-from furl import furl
 from pathlib import Path
 from utils.errors import *
-from utils.mq_handlers import MQHandler
+from utils.mq.mq_handlers import MQHandler
 import json
 from .parsers import *
 

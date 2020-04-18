@@ -9,3 +9,4 @@ termcolor
 pika
 # pillow-6.2.1
 protobuf
+sqlalchemy
