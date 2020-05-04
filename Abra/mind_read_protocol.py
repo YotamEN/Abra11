@@ -1,8 +1,6 @@
+from .common import FAIL, SUCCESS
 import requests
 from requests.exceptions import HTTPError
-
-ERROR_OCCURRED = -1
-SUCCESS = 0
 
 
 class ProtocolHandler:
@@ -22,7 +20,7 @@ class ProtocolHandler:
             return SUCCESS
         except HTTPError as err:
             print(f'HTTP error occurred: {err}')
-            return ERROR_OCCURRED
+            return FAIL
 
     def get(self):
         try:
@@ -32,4 +30,4 @@ class ProtocolHandler:
             return response.text
         except HTTPError as err:
             print(f'HTTP error occurred: {err}')
-            return ERROR_OCCURRED
+            return FAIL

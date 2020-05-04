@@ -6,27 +6,25 @@ import json
 import os
 import random
 from termcolor import cprint
-from utils.mq.mq_handlers import MQHandler
+from abra.mq.mq_handlers import MQHandler
 
 
 _WORK_DIR = "/state_of_minds"
-SUCCESS = 0
-FAIL = 1
 app = Flask(__name__)
 _publish = None
 
 
-#FIXME add errors everywhere
+# FIXME add errors everywhere
 @click.group()
 def main():
     pass
 
 
 @main.command('run-server')
-@click.option("--host", "-h", default='127.0.0.1')
-@click.option("--port", "-p", default=8000)
-@click.argument('publish', help="URL to message queue")
-def run_server(host, port, publish=None):
+@click.option("--host", "-h", default=LOCAL_HOST)
+@click.option("--port", "-p", default=APP_SERVER_PORT)
+@click.argument('publish')
+def run_server(host=LOCAL_HOST, port=APP_SERVER_PORT, publish=None):
     global _publish
     _publish = publish
 
@@ -77,7 +75,7 @@ def publish_msg(msg):
 
 def publish_user(user):
     mq_handler = MQHandler(_publish)
-    mq_handler.publish_to_saver_queue(user)
+    mq_handler.publish_to_parsed_data_exchange("user", user)
 
 
 def save_snapshot(snapshot: Snapshot, path: str):
@@ -105,4 +103,3 @@ def jsonify_user(user):
 
 if __name__ == '__main__':
     main()
-

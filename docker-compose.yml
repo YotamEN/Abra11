@@ -1,0 +1,57 @@
+version: '3.7'
+
+services:
+    rabbitmq:
+        hostname: rabbit
+        image: rabbitmq:latest
+        environment:
+            - RABBITMQ_DEFAULT_USER=admin
+            - RABBITMQ_DEFAULT_PASS=mypass
+        ports:
+            - 5672:5672
+        networks:
+            - network
+        volumes:
+            - ./abra:/opt/abra/vol
+
+
+    postgres:
+        hostname: postgres
+        image: postgres:latest
+        environment:
+            POSTGRES_DB: postgres
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+        ports:
+            - 5432:5432
+        networks:
+            - network
+        volumes:
+            - ./abra:/opt/abra/vol
+
+    app:
+        build:
+            context: .
+            dockerfile: ./abra//Dockerfile
+        hostname: server
+        depends_on:
+            - rabbitmq
+        links:
+            - rabbitmq
+        ports:
+            - 6500:6500
+        environment:
+            WAIT_HOSTS: rabbit_mq:5672
+            DEBUG: 'true'
+        networks:
+            - network
+        volumes:
+            - ./abra:/opt/abra/vol
+
+networks:
+    network: {}
+
+volumes:
+    app:
+        driver: local
+

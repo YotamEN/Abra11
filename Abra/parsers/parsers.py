@@ -1,4 +1,6 @@
 from ..common import *
+from pathlib import Path
+import uuid
 
 """
 In order for you to add your own parser, follow the following steps:
@@ -16,7 +18,7 @@ In order for you to add your own parser, follow the following steps:
     4. You're good to go!
 """
 UNDEFINED = -1
-PARSER_NAMES = ["pose", "color image", "depth image", "feelings"]
+PARSER_NAMES = ["pose", "color_image", "depth_image", "feelings"]
 
 
 # *************************************
@@ -30,6 +32,18 @@ class BaseParser:
     # each parser must implement this function
     def parse(self, msg):
         pass
+
+    def write_to_disk(self, path, data):
+        unique_filename = str(uuid.uuid4())
+        try:
+            path = Path(path) / unique_filename
+            with open(path, "wb") as f:
+                f.write(data)
+        except OSError as e:
+            raise e
+        except ValueError:
+            return ''
+        return unique_filename
 
 
 # ******************************************
@@ -53,29 +67,33 @@ class PoseParser(BaseParser):
 
 
 class CImageParser(BaseParser):
-    parser_name = "color image"
+    parser_name = "color_image"
 
     def parse(self, msg):
+        data = msg.color_image.data
+        path = self.write_to_disk(C_IMG_DATA_DIR, data)
         ret_dict = {
             PARSER_NAME_KEY: self.parser_name,
             DATETIME_KEY: msg.datetime,
             WIDTH_KEY: msg.color_image.width,
             HEIGHT_KEY: msg.color_image.height,
-            IMAGE_DATA_KEY: msg.color_image.data
+            IMAGE_DATA_KEY: path
         }
         return ret_dict
 
 
 class DImageParser(BaseParser):
-    parser_name = "depth image"
+    parser_name = "depth_image"
 
     def parse(self, msg):
+        data = msg.color_image.data
+        path = self.write_to_disk(D_IMG_DATA_DIR, data)
         ret_dict = {
             PARSER_NAME_KEY: self.parser_name,
             DATETIME_KEY: msg.datetime,
             WIDTH_KEY: msg.depth_image.width,
             HEIGHT_KEY: msg.depth_image.height,
-            IMAGE_DATA_KEY: msg.depth_image.data
+            IMAGE_DATA_KEY: path
         }
         return ret_dict
 

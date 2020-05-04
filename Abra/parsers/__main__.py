@@ -1,8 +1,7 @@
-from Abra.abra_pb2 import Snapshot, SnapshotPathWrapper
+from abra.abra_pb2 import Snapshot, SnapshotPathWrapper
 import click
-from pathlib import Path
 from utils.errors import *
-from utils.mq.mq_handlers import MQHandler
+from abra.mq.mq_handlers import MQHandler
 import json
 from .parsers import *
 
@@ -32,12 +31,12 @@ def run_parser_cli(parser: str, mq_url: str):
     parser_h = parser_class()
     mq_handler = MQHandler(mq_url)
 
-    def on_message(self, ch, method, props, body):
+    def on_message(ch, method, props, body):
         user, path = unpack_path_wrapper(body)
         snapshot = load_snapshot(path)
         parsed_data = parser_h.parse(msg=snapshot)
         wrapped_json_parsed_data = wrap_data_for_saver(user, parsed_data)
-        mq_handler.publish_to_saver_queue(wrapped_json_parsed_data)
+        mq_handler.publish_to_parsed_data_exchange(wrapped_json_parsed_data, parser)
 
     # runs forever... stops on CTRL-C
     mq_handler.consume_queue(queue=parser, callback=on_message)

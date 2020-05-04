@@ -22,11 +22,11 @@ class ColorImage(Base):
     user_id = Column(Integer, ForeignKey('user_snapshots.user_id'))
     width = Column(Integer, primary_key=True)
     height = Column(Integer)
-    data = Column(BYTEA(length=3))
+    data_path = Column(String)
 
     def __repr__(self):
         return f"ColorImage<width='{self.width}', height='{self.height}', " \
-               f"data='{self.data}'>"
+               f"data='{self.data_path}'>"
 
 
 class DepthImage(Base):
@@ -34,11 +34,11 @@ class DepthImage(Base):
     user_id = Column(Integer, ForeignKey('user_snapshots.user_id'))
     width = Column(Integer, primary_key=True)
     height = Column(Integer)
-    data = Column(ARRAY(FLOAT, dimensions=3))
+    data_path = Column(String)
 
     def __repr__(self):
         return f"DepthImage<width='{self.width}', height='{self.height}', " \
-               f"data='{self.data}'>"
+               f"data='{self.data_path}'>"
 
 
 class Feelings(Base):
