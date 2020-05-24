@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Snapshot</title>
+        <meta name="description" content="Snapshot of the mind" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
+        <link rel="stylesheet" href="/static/css/styles.css" />
+        <link rel="shortcut icon" href="/static/favicon.ico">
+    </head>
+<body>
+<div class="items">
+    <div class="items-border"> </div>
+    <div class="items-rows">
+        {% for snap in snapshots %}
+        <div class="item-row">
+            <div class="item-section item-section-text">
+                <span>Timestamp: {{ snap.datetime }},  Snapshot ID: {{ snap.snapshot_id }}</span>
+            </div>
+            <div class="item-section item-section-links">
+
+                <a
+                    href="/users/{{ user_id }}/snapshots/{{ snap.snapshot_id }}"
+                >
+                    ~ User State Of Mind - Press Here! ~
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+
+
+    </div>
+</div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-146098773-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-146098773-1');
+        </script>
+        <script>
+            $(document).ready(function() {
+                $('.menu-cursor').removeClass('menu-cursor-hidden');
+                $('.menu-link').mouseover(function() {
+                    var num = $(this).data('num');
+                    $(this).parents('.menu').find('.menu-cursor').addClass('menu-cursor-temporary-' + num);
+                }).mouseout(function() {
+                    var num = $(this).data('num');
+                    $(this).parents('.menu').find('.menu-cursor').removeClass('menu-cursor-temporary-' + num);
+                });
+            });
+        </script>
+        <p>
+            <img src="/static/images/abra_attack_gif.gif"
+                 style="position:absolute; TOP:60px; LEFT:50px; WIDTH:200px; HEIGHT:200px"/>
+        </p>
+</body>
+</html>

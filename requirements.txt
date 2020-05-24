@@ -1,3 +1,6 @@
+Pillow
+matplotlib
+numpy
 click
 coverage
 docker
@@ -7,6 +10,7 @@ requests
 Sphinx
 termcolor
 pika
-# pillow-6.2.1
 protobuf
+psycopg2-binary
+requests-mock
 sqlalchemy

@@ -1,57 +1,210 @@
-version: '3.7'
+version: '3'
 
 services:
     rabbitmq:
-        hostname: rabbit
-        image: rabbitmq:latest
-        environment:
-            - RABBITMQ_DEFAULT_USER=admin
-            - RABBITMQ_DEFAULT_PASS=mypass
+        #hostname: rabbitmq
+        image: rabbitmq
+        expose:
+            - "5672"
         ports:
-            - 5672:5672
+            - "5672:5672"
         networks:
             - network
-        volumes:
-            - ./abra:/opt/abra/vol
+#        volumes:
+#            - ./vol:/vol
 
 
     postgres:
-        hostname: postgres
-        image: postgres:latest
+        #hostname: postgres
+        image: postgres
         environment:
             POSTGRES_DB: postgres
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: postgres
+        expose:
+            - "5432"
         ports:
-            - 5432:5432
+            - "5432:5432"
+        networks:
+            - network
+#        volumes:
+#            - ./vol:/vol
+
+    server:
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        hostname: server
+        image: server
+        command: python -m abra.server run-server -h 0.0.0.0 -p 8000 rabbitmq://rabbitmq:5672/
+        depends_on:
+            - "rabbitmq"
+        links:
+            - "rabbitmq"
+        expose:
+            - "8000"
+        ports:
+            - "8000:8000"
+        environment:
+            FLASK_ENV: debug
+            WAIT_HOSTS: rabbit_mq:5672
         networks:
             - network
         volumes:
-            - ./abra:/opt/abra/vol
+            - ./vol:/vol
 
-    app:
+    saver:
         build:
             context: .
-            dockerfile: ./abra//Dockerfile
-        hostname: server
+            dockerfile: ./Dockerfile
+        hostname: saver
+        image: saver
+        command: ./wait-for-it.sh rabbitmq:5672 -- python -m abra.saver run-saver 'postgresql://postgres:5432' rabbitmq://rabbitmq:5672/
+        depends_on:
+            - "rabbitmq"
+            - "postgres"
+        links:
+            - "rabbitmq"
+            - "postgres"
+        environment:
+            WAIT_HOSTS: rabbit_mq:5672, postgres:5432
+            DEBUG: 'true'
+        restart: always
+        networks:
+            - network
+        volumes:
+            - ./vol:/vol
+
+    api:
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        hostname: api
+        image: api
+        command: ./wait-for-it.sh postgres:5432 -- python -m abra.api run-server -h 0.0.0.0 -p 5000 -d postgresql://postgres:5432
+        depends_on:
+            - postgres
+        links:
+            - postgres
+        ports:
+            - "5000:5000"
+        expose:
+            - "5000"
+        environment:
+            WAIT_HOSTS: postgres:5432
+            DEBUG: 'true'
+        restart: on-failure
+        networks:
+            - network
+        volumes:
+            - ./vol:/vol
+
+    gui:
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        hostname: gui
+        image: gui
+        command: ./wait-for-it.sh api:5000 -- python -m abra.gui run-server -h 0.0.0.0 -p 8080 -H api -P 5000
+        depends_on:
+            - api
+        links:
+            - api
+        ports:
+            - "8080:8080"
+        expose:
+            - "8080"
+        environment:
+            WAIT_HOSTS: api:5000
+            DEBUG: 'true'
+        restart: on-failure
+        networks:
+            - network
+        volumes:
+            - ./vol:/vol
+
+    pose:
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        hostname: pose
+        image: pose
+        command: ./wait-for-it.sh rabbitmq:5672 -- python -m abra.parsers run-parser 'pose' rabbitmq://rabbitmq:5672/
         depends_on:
             - rabbitmq
         links:
             - rabbitmq
-        ports:
-            - 6500:6500
         environment:
             WAIT_HOSTS: rabbit_mq:5672
             DEBUG: 'true'
+        restart: on-failure
         networks:
             - network
         volumes:
-            - ./abra:/opt/abra/vol
+            - ./vol:/vol
+
+    color-image:
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        hostname: color-image
+        image: color_image
+        command: ./wait-for-it.sh rabbitmq:5672 -- python -m abra.parsers run-parser 'color-image' rabbitmq://rabbitmq:5672/
+        depends_on:
+            - rabbitmq
+        links:
+            - rabbitmq
+        environment:
+            WAIT_HOSTS: rabbit_mq:5672
+            DEBUG: 'true'
+        restart: on-failure
+        networks:
+            - network
+        volumes:
+            - ./vol:/vol
+
+    depth-image:
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        hostname: depth-image
+        image: depth_image
+        command: ./wait-for-it.sh rabbitmq:5672 -- python -m abra.parsers run-parser 'depth-image' rabbitmq://rabbitmq:5672/
+        depends_on:
+            - rabbitmq
+        links:
+            - rabbitmq
+        environment:
+            WAIT_HOSTS: rabbit_mq:5672
+            DEBUG: 'true'
+        restart: on-failure
+        networks:
+            - network
+        volumes:
+            - ./vol:/vol
+
+    feelings:
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        hostname: feelings
+        image: feelings
+        command: ./wait-for-it.sh rabbitmq:5672 -- python -m abra.parsers run-parser 'feelings' rabbitmq://rabbitmq:5672/
+        depends_on:
+            - rabbitmq
+        links:
+            - rabbitmq
+        environment:
+            WAIT_HOSTS: rabbit_mq:5672
+            DEBUG: 'true'
+        restart: on-failure
+        networks:
+            - network
+        volumes:
+            - ./vol:/vol
+
 
 networks:
-    network: {}
-
-volumes:
-    app:
-        driver: local
+    network:
+        driver: bridge
 

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Abra</title>
+        <meta name="description" content="Abra: Mind Reading App" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
+        <link rel="stylesheet" href="/static/css/styles.css" />
+        <link rel="shortcut icon" href="/static/favicon.ico">
+    </head>
+    <body>
+        
+        <Div class="index-frame">
+            <div class="index-container">
+                <div class="index-section index-light-green index-clickable" data-url="/users/">
+                    <div class="index-light-green-button">
+                        Abra: the rad mind reader
+                    </div>
+                </div>
+                <div class="index-section index-transparent index-clickable" data-url="/users/">
+                    <img src="../static/images/abra_hd.png" alt="" />
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-146098773-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-146098773-1');
+        </script>
+        <script>
+            $(document).ready(function() {
+                $('.menu-cursor').removeClass('menu-cursor-hidden');
+                $('.menu-link').mouseover(function() {
+                    var num = $(this).data('num');
+                    $(this).parents('.menu').find('.menu-cursor').addClass('menu-cursor-temporary-' + num);
+                }).mouseout(function() {
+                    var num = $(this).data('num');
+                    $(this).parents('.menu').find('.menu-cursor').removeClass('menu-cursor-temporary-' + num);
+                });
+            });
+        </script>
+        
+        <script>
+            $(document).ready(function() {
+                $('.index-clickable').click(function() {
+                    $('.index-container').addClass('index-container-exit');
+                    $('.index-section').addClass('index-section-exit');
+                    var url = $(this).data('url');
+                    if (url) {
+                        setTimeout(function() {
+                            window.location.href = url;
+                        }, 1300);
+                    }
+                });
+            });
+        </script>
+
+    </body>
+</html>

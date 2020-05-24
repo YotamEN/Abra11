@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Snapshot</title>
+        <meta name="description" content="Snapshot of the mind" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
+        <link rel="stylesheet" href="/static/css/styles.css" />
+        <link rel="shortcut icon" href="/static/favicon.ico">
+    </head>
+    <body>
+        <Div class="snap-frame">
+                <div class="snap-container">
+
+                        {% if "pose" in data.available_results %}
+                        <div class="snap-section snap-light-green snap-clickable"
+                             data-url="/users/{{ data.user_id }}/snapshots/{{ data.snapshot_id }}/pose">
+                                <div class="snap-light-green-button">
+                                Position and Transformation
+                                </div>
+                        </div>
+                        {% else %}
+                        <div class="snap-section snap-light-green snap-clickable"
+                             data-url="/users/{{ data.user_id }}/snapshots/{{ data.snapshot_id }}">
+                                <div class="snap-light-green-button">
+                                Position and Transformation (Unavailable, apologies)
+                                </div>
+                        </div>
+                        {% endif %}
+
+                        {% if "color-image" in data.available_results %}
+                        <div class="snap-section snap-darker-green snap-clickable"
+                             data-url="/users/{{ data.user_id }}/snapshots/{{ data.snapshot_id }}/color-image">
+                                <div class="snap-darker-green-button">
+                                    Color Image
+                                </div>
+                        </div>
+                        {% else %}
+                        <div class="snap-section snap-darker-green snap-clickable"
+                             data-url="/users/{{ data.user_id }}/snapshots/{{ data.snapshot_id }}">
+                                <div class="snap-darker-green-button">
+                                    Color Image (Unavailable, apologies)
+                                </div>
+                        </div>
+                        {% endif %}
+
+                        {% if "depth-image" in data.available_results %}
+                        <div class="snap-section snap-even-darker-green snap-clickable"
+                             data-url="/users/{{ data.user_id }}/snapshots/{{ data.snapshot_id }}/depth-image">
+                                <div class="snap-even-darker-green-button">
+                                    Depth Image
+                                </div>
+                        </div>
+                        {% else %}
+                        <div class="snap-section snap-even-darker-green snap-clickable"
+                             data-url="/users/{{ data.user_id }}/snapshots/{{ data.snapshot_id }}">
+                                <div class="snap-even-darker-green-button">
+                                    Depth Image (Unavailable, apologies)
+                                </div>
+                        </div>
+                        {% endif %}
+
+                        {% if "feelings" in data.available_results %}
+                        <div class="snap-section snap-super-dark-green snap-clickable"
+                             data-url="/users/{{ data.user_id }}/snapshots/{{ data.snapshot_id }}/feelings">
+                                <div class="snap-super-dark-green-button">
+                                    Feelings
+                                </div>
+                        </div>
+                        {% else %}
+                        <div class="snap-section snap-super-dark-green snap-clickable"
+                             data-url="/users/{{ data.user_id }}/snapshots/{{ data.snapshot_id }}">
+                                <div class="snap-super-dark-green-button">
+                                    Feelings (Unavailable, apologies)
+                                </div>
+                        </div>
+                        {% endif %}
+
+                </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-146098773-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-146098773-1');
+        </script>
+        <script>
+            $(document).ready(function() {
+                $('.menu-cursor').removeClass('menu-cursor-hidden');
+                $('.menu-link').mouseover(function() {
+                    var num = $(this).data('num');
+                    $(this).parents('.menu').find('.menu-cursor').addClass('menu-cursor-temporary-' + num);
+                }).mouseout(function() {
+                    var num = $(this).data('num');
+                    $(this).parents('.menu').find('.menu-cursor').removeClass('menu-cursor-temporary-' + num);
+                });
+            });
+        </script>
+
+        <script>
+            $(document).ready(function() {
+                $('.snap-clickable').click(function() {
+                    $('.snap-container').addClass('snap-container-exit');
+                    $('.snap-section').addClass('snap-section-exit');
+                    var url = $(this).data('url');
+                    if (url) {
+                        setTimeout(function() {
+                            window.location.href = url;
+                        }, 1300);
+                    }
+                });
+            });
+        </script>
+
+    </body>
+</html>
